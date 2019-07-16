@@ -1,0 +1,7 @@
+torch==1.1.0
+numpy
+opencv-python
+torchvision==0.3.0
+flyai
+yacs
+
