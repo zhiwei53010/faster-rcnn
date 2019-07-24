@@ -35,15 +35,15 @@ class MyDataset(Dataset):
 
         assert len(self.img_paths) == len(self.labels)
 
-        length = int(len(self.img_paths) * 0.8)
+        length = int(len(self.img_paths) * 0.9)
         if train:
-            self.img_paths = self.img_paths[:length]
-            self.labels = self.labels[:length]
+            # self.img_paths = self.img_paths[:length]
+            # self.labels = self.labels[:length]
+            pass
         else:
             self.img_paths = self.img_paths[length:]
             self.labels = self.labels[length:]
-            # self.img_paths = self.img_paths
-            # self.labels = self.labels
+            pass
 
         self.length = len(self.img_paths)
         self.transform = transforms

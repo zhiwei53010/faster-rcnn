@@ -27,3 +27,21 @@ def get_iou(out ,gt):
 
     return inter / union
 
+
+def show_box(img, box):
+    image = np.array(img)
+
+    for i in range(6):
+        top_left, bottom_right = box[[4*i, 4*i+1]], box[[4*i+2, 4*i+3]]
+        image = cv2.rectangle(img=image, pt1=tuple(top_left), pt2=tuple(bottom_right), color=255, thickness=2)
+    # top_left, bottom_right = box[[1,0]].tolist(), box[[3,2]].tolist()
+    # image = cv2.rectangle(
+    #     image, tuple(top_left), tuple(bottom_right), 1, 1
+    # )
+
+    image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+    cv2.imshow('name', image)
+    cv2.waitKey(0)
+    print()
+    # plt.imshow(image)
+    # plt.show()

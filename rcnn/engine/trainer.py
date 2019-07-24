@@ -107,13 +107,12 @@ def do_train(
         if iteration % checkpoint_period == 0:
             # checkpointer.save("model_{:07d}".format(iteration), **arguments)
             MODEL_PATH = os.path.join(sys.path[0], 'data', 'output', 'model')
-            if iteration <= checkpoint_period:
-                torch.save(model, os.path.join(MODEL_PATH, 'last.pkl'))
-            temp_iou = val()
-            if temp_iou > max_iou:
-                torch.save(model, os.path.join(MODEL_PATH, 'last.pkl'))
-                print('Update')
-                max_iou = temp_iou
+            if not os.path.exists(MODEL_PATH):
+                os.makedirs(MODEL_PATH)
+            torch.save(model, os.path.join(MODEL_PATH, 'last.pkl'))
+            print('Save !')
+            val()
+
         if iteration == max_iter:
             # checkpointer.save("model_final", **arguments)
             pass

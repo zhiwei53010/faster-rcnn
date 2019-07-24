@@ -1,4 +1,4 @@
-from rcnn.dta import datasets
+from rcnn.dta import dsets
 
 from .coco import coco_evaluation
 from .voc import voc_evaluation
@@ -18,9 +18,9 @@ def evaluate(dataset, predictions, output_folder, **kwargs):
     args = dict(
         dataset=dataset, predictions=predictions, output_folder=output_folder, **kwargs
     )
-    if isinstance(dataset, datasets.COCODataset):
+    if isinstance(dataset, dsets.COCODataset):
         return coco_evaluation(**args)
-    elif isinstance(dataset, datasets.PascalVOCDataset):
+    elif isinstance(dataset, dsets.PascalVOCDataset):
         return voc_evaluation(**args)
     else:
         dataset_name = dataset.__class__.__name__

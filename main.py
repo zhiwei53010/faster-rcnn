@@ -4,6 +4,7 @@ import argparse
 import os, sys
 sys.path.append('./rcnn')
 import torch
+# import setup
 from rcnn.config import cfg
 from rcnn.dta.build import make_data_loader
 from rcnn.solver.build import make_lr_scheduler
@@ -16,6 +17,7 @@ from rcnn.modeling.detector import build_detection_model
 
 def train(cfg, local_rank, distributed):
     model = build_detection_model(cfg)
+    # model = torch.load('./data/output/model/last.pkl')
     device = torch.device(cfg.MODEL.DEVICE)
     model.to(device)
 
@@ -32,8 +34,8 @@ def train(cfg, local_rank, distributed):
     checkpointer = DetectronCheckpointer(
         cfg, model, optimizer, scheduler, output_dir, save_to_disk
     )
-    extra_checkpoint_data = checkpointer.load(cfg.MODEL.WEIGHT)
-    arguments.update(extra_checkpoint_data)
+    # extra_checkpoint_data = checkpointer.load(cfg.MODEL.WEIGHT)
+    # arguments.update(extra_checkpoint_data)
 
     data_loader = make_data_loader(
         cfg,
@@ -58,8 +60,8 @@ def train(cfg, local_rank, distributed):
 
     return model
 
-def main_train(*argss):
-    parser = argparse.ArgumentParser(description="PyTorch Object Detection Training")
+def main_train(parser):
+    # parser = argparse.ArgumentParser(description="PyTorch Object Detection Training")
     parser.add_argument(
         "--config-file",
         default="e2e_faster_rcnn_R_50_FPN_1x.yaml",
@@ -92,10 +94,10 @@ def main_train(*argss):
 
     logger = setup_logger("rcnn", None, get_rank())
 
-    with open(args.config_file, "r") as cf:
-        config_str = "\n" + cf.read()
-        logger.info(config_str)
-    logger.info("Running with config:\n{}".format(cfg))
+    # with open(args.config_file, "r") as cf:
+    #     config_str = "\n" + cf.read()
+    #     logger.info(config_str)
+    # logger.info("Running with config:\n{}".format(cfg))
 
     net = train(cfg, args.local_rank, args.distributed)
 
@@ -106,8 +108,10 @@ if __name__ == '__main__':
     parser.add_argument("-e", "--EPOCHS", default=100, type=int, help="train epochs")
     parser.add_argument("-b", "--BATCH", default=2, type=int, help="batch size")
     args = parser.parse_args()
+    a = args.BATCH
+    b = args.EPOCHS
 
-    main_train([args.BATCH, args.EPOCHS])
+    main_train(parser)
 
 
 

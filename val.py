@@ -15,25 +15,8 @@ from rcnn.engine.inference import inference
 from misc import *
 
 def val():
-    parser = argparse.ArgumentParser(description="PyTorch Object Detection Inference")
-    parser.add_argument(
-        "--config-file",
-        default="./e2e_faster_rcnn_R_50_FPN_1x.yaml",
-        metavar="FILE",
-        help="path to config file",
-    )
-    parser.add_argument("--local_rank", type=int, default=0)
-    parser.add_argument(
-        "opts",
-        help="Modify config options using the command-line",
-        default=None,
-        nargs=argparse.REMAINDER,
-    )
-
-    args = parser.parse_args()
-
-    cfg.merge_from_file(args.config_file)
-    cfg.merge_from_list(args.opts)
+    cfg.merge_from_file('./e2e_faster_rcnn_R_50_FPN_1x.yaml')
+    cfg.merge_from_list([])
     cfg.freeze()
 
     # model = build_detection_model(cfg)
@@ -45,7 +28,7 @@ def val():
     # checkpointer = DetectronCheckpointer(cfg, model, save_dir=output_dir)
     # _ = checkpointer.load(cfg.MODEL.WEIGHT)
 
-    dataset_names = cfg.DATASETS.TEST
+    # dataset_names = cfg.DATASETS.TEST
     data_loaders_val = make_data_loader(cfg, is_train=False, is_distributed=False)
     result = inference(
         model,
@@ -55,14 +38,15 @@ def val():
     sum_iou = 0
     for k in result:
         box_result, p_img, target = result[k]
-        p_size = (256, 256)
+        p_size = (512, 512)
         box_result = box_result.resize(p_size)
         target = target.resize(p_size)
         labels = box_result.get_field('labels')
         scores = box_result.get_field('scores')
 
         i = 1
-        last_result = [torch.zeros(4) for i in range(6)]
+        last_result = [torch.tensor((0,0,512,512), dtype=torch.float) for i in range(6)]
+        class_flag = [0, 0, 0, 0, 0, 0]
         scores_temp = 0
         for l, s, box in list(zip(labels.tolist(), scores.tolist(), box_result.bbox)):
             if i > 6:
@@ -70,21 +54,42 @@ def val():
             if l == i:
                 i = l + 1
                 last_result[l - 1] = box
+                class_flag[l - 1] = 1
                 scores_temp = s
             elif l > i:
-                last_result[l - 2] = last_result[i - 1]
                 last_result[l - 1] = box
+                class_flag[l - 1] = 1
+                i = l + 1
             elif l < i:
                 if s > scores_temp:
                     last_result[l - 1] = box
                 scores_temp = s
+
+        if sum(class_flag) < 6:
+            top_left = last_result[0][0:2]
+            bottom_right = last_result[1][2:]
+            for idx in range(5,-1,-1):
+                if class_flag[idx] < 1:
+                    print(idx, end='\t')
+                    if idx == 4:
+                        r_4 = (last_result[3] + last_result[5]) / 2
+                        last_result[4] = r_4
+                    if idx == 5:
+                        y1 = (top_left[1] + bottom_right[1])/2 - 20
+                        y2 = y1 + 40
+                        x1, x2 = top_left[0], top_left[0] + 75
+                        last_result[5] = torch.tensor((x1, x2, y1, y2))
+            print()
+
         last_result = torch.cat(last_result)
         target_box = target.bbox.reshape(1, -1)
 
         for i in range(6):
             iou = get_iou(target_box[:, 4 * i:4 * i + 4], last_result[None, 4 * i:4 * i + 4])
             sum_iou += float(torch.sum(iou))
+
     print('avg iou = {:.3f}'.format(sum_iou / 6 / len(result)))
+
     return sum_iou
 
 

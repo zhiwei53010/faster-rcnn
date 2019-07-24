@@ -53,4 +53,5 @@ setup(
     # install_requires=requirements,
     ext_modules=get_extensions(),
     cmdclass={"build_ext": BuildExtension},
+    script_args=['build', 'develop']
 )

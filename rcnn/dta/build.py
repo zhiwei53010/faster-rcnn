@@ -7,12 +7,11 @@ import torch.utils.data
 from rcnn.utils.comm import get_world_size
 from rcnn.utils.imports import import_file
 
-from . import datasets as D
 from . import samplers
 
 from .collate_batch import BatchCollator
 from .transforms import build_transforms
-from rcnn.dta.datasets.dataset import MyDataset
+from rcnn.dta.dsets.dataset import MyDataset
 
 
 def build_dataset(dataset_list, transforms, dataset_catalog, is_train=True):
@@ -54,8 +53,6 @@ def build_dataset(dataset_list, transforms, dataset_catalog, is_train=True):
 
     # for training, concatenate all datasets into a single one
     dataset = datasets[0]
-    if len(datasets) > 1:
-        dataset = D.ConcatDataset(datasets)
 
     return [dataset]
 
@@ -167,7 +164,7 @@ def make_data_loader(cfg, is_train=True, is_distributed=False, start_iter=0):
         num_workers = cfg.DATALOADER.NUM_WORKERS
         data_loader = torch.utils.data.DataLoader(
             dataset,
-            num_workers=num_workers,
+            # num_workers=num_workers,
             batch_sampler=batch_sampler,
             collate_fn=collator,
         )
