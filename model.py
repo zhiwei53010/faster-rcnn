@@ -93,7 +93,7 @@ class Model(Base):
                 bottom_right = last_result[1][2:]
                 for idx in range(6):
                     if class_flag[idx] < 1:
-                        sys.stderr.writr('{}\t'.format(idx))
+                        sys.stderr.write('{}\t'.format(idx))
                         # if idx == 4:
                         #     r_4 = (last_result[3] + last_result[5]) / 2
                         #     last_result[4] = r_4
@@ -102,7 +102,7 @@ class Model(Base):
                         #     y2 = y1 + 40
                         #     x1, x2 = top_left[0], top_left[0] + 75
                         #     last_result[5] = torch.tensor((x1, x2, y1, y2), device=device)
-                sys.stderr.writr('\n')
+                sys.stderr.write('\n')
 
 
             last_result = torch.cat(last_result).detach().cpu().numpy()

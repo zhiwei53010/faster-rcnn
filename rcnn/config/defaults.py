@@ -69,7 +69,7 @@ _C.DATASETS.TEST = ()
 # -----------------------------------------------------------------------------
 _C.DATALOADER = CN()
 # Number of data loading threads
-_C.DATALOADER.NUM_WORKERS = 1
+_C.DATALOADER.NUM_WORKERS = 4
 # If > 0, this enforces that each collated batch should have a size divisible
 # by SIZE_DIVISIBILITY
 _C.DATALOADER.SIZE_DIVISIBILITY = 0
@@ -273,6 +273,10 @@ _C.MODEL.RESNETS.RES5_DILATION = 1
 _C.MODEL.RESNETS.BACKBONE_OUT_CHANNELS = 256 * 4
 _C.MODEL.RESNETS.RES2_OUT_CHANNELS = 256
 _C.MODEL.RESNETS.STEM_OUT_CHANNELS = 64
+
+_C.MODEL.RESNETS.STAGE_WITH_DCN = (False, False, False, False)
+_C.MODEL.RESNETS.WITH_MODULATED_DCN = False
+_C.MODEL.RESNETS.DEFORMABLE_GROUPS = 1
 
 
 # ---------------------------------------------------------------------------- #

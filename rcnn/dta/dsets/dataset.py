@@ -27,9 +27,9 @@ class MyDataset(Dataset):
         self.root = os.path.join(root, 'data')
 
         # 线上代码用
-        self.img_paths, self.labels = self.read_data2()
+        # self.img_paths, self.labels = self.read_data2()
         # 本地调试用
-        # self.img_paths, self.labels = self.read_data()
+        self.img_paths, self.labels = self.read_data()
 
         self.train = train
 
@@ -37,8 +37,8 @@ class MyDataset(Dataset):
 
         length = int(len(self.img_paths) * 0.9)
         if train:
-            # self.img_paths = self.img_paths[:length]
-            # self.labels = self.labels[:length]
+            self.img_paths = self.img_paths[:length]
+            self.labels = self.labels[:length]
             pass
         else:
             self.img_paths = self.img_paths[length:]

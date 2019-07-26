@@ -45,3 +45,18 @@ def show_box(img, box):
     print()
     # plt.imshow(image)
     # plt.show()
+
+def show_box2(img, box_pre, idx, iou_list):
+    image = np.array(img)
+
+    for i in range(6):
+        top_left, bottom_right = box_pre[[4*i, 4*i+1]], box_pre[[4*i+2, 4*i+3]]
+        image = cv2.rectangle(img=image, pt1=tuple(top_left), pt2=tuple(bottom_right), color=255, thickness=2)
+        image = cv2.putText(image, '{:.3f}'.format(iou_list[i]), tuple(top_left), cv2.FONT_HERSHEY_SIMPLEX, .7, (255, 255, 255), 2)
+        #def putText(img, text, org, fontFace, fontScale, color, thickness=None, lineType=None, bottomLeftOrigin=None)
+
+    image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+    cv2.imshow('name', image)
+    cv2.imwrite('./data/result/{}.jpg'.format(idx), image)
+    cv2.waitKey(0)
+    print()

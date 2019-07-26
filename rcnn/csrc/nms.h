@@ -1,6 +1,6 @@
 // Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 #pragma once
-#include "cpu/vision.h"
+//#include "cpu/vision.h"
 
 #ifdef WITH_CUDA
 #include "cuda/vision.h"
@@ -23,6 +23,6 @@ at::Tensor nms(const at::Tensor& dets,
 #endif
   }
 
-  at::Tensor result = nms_cpu(dets, scores, threshold);
-  return result;
+//  at::Tensor result = nms_cpu(dets, scores, threshold);
+//  return result;
 }

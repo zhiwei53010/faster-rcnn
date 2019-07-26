@@ -15,7 +15,7 @@ from rcnn.engine.inference import inference
 from misc import *
 
 def val():
-    cfg.merge_from_file('./e2e_faster_rcnn_R_50_FPN_1x.yaml')
+    cfg.merge_from_file('./e2e_faster_rcnn_dconv_R_50_FPN_1x.yaml')
     cfg.merge_from_list([])
     cfg.freeze()
 

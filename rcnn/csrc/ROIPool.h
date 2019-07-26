@@ -1,7 +1,7 @@
 // Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 #pragma once
 
-#include "cpu/vision.h"
+//#include "cpu/vision.h"
 
 #ifdef WITH_CUDA
 #include "cuda/vision.h"

@@ -1,7 +1,7 @@
 // Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 #pragma once
 
-#include "cpu/vision.h"
+//#include "cpu/vision.h"
 
 #ifdef WITH_CUDA
 #include "cuda/vision.h"
@@ -21,7 +21,7 @@ at::Tensor ROIAlign_forward(const at::Tensor& input,
     AT_ERROR("Not compiled with GPU support");
 #endif
   }
-  return ROIAlign_forward_cpu(input, rois, spatial_scale, pooled_height, pooled_width, sampling_ratio);
+//  return ROIAlign_forward_cpu(input, rois, spatial_scale, pooled_height, pooled_width, sampling_ratio);
 }
 
 at::Tensor ROIAlign_backward(const at::Tensor& grad,

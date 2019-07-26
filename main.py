@@ -18,6 +18,7 @@ from rcnn.modeling.detector import build_detection_model
 def train(cfg, local_rank, distributed):
     model = build_detection_model(cfg)
     # model = torch.load('./data/output/model/last.pkl')
+
     device = torch.device(cfg.MODEL.DEVICE)
     model.to(device)
 
@@ -34,8 +35,8 @@ def train(cfg, local_rank, distributed):
     checkpointer = DetectronCheckpointer(
         cfg, model, optimizer, scheduler, output_dir, save_to_disk
     )
-    # extra_checkpoint_data = checkpointer.load(cfg.MODEL.WEIGHT)
-    # arguments.update(extra_checkpoint_data)
+    extra_checkpoint_data = checkpointer.load(cfg.MODEL.WEIGHT)
+    arguments.update(extra_checkpoint_data)
 
     data_loader = make_data_loader(
         cfg,
@@ -64,7 +65,7 @@ def main_train(parser):
     # parser = argparse.ArgumentParser(description="PyTorch Object Detection Training")
     parser.add_argument(
         "--config-file",
-        default="e2e_faster_rcnn_R_50_FPN_1x.yaml",
+        default="e2e_faster_rcnn_dconv_R_50_FPN_1x.yaml",
         metavar="FILE",
         help="path to config file",
         type=str,
